@@ -1,0 +1,18 @@
+@font-face {
+  font-family: Futura;
+  src: url("./Futura-Medium.woff");
+}
+
+body {
+  font-family: Futura;
+  margin:0px;
+  padding:0px;
+  background-color: black;
+  overflow: hidden;
+}
+
+
+.hu {
+  font-size: 400px;
+  color:white;
+}
