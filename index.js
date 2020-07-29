@@ -68,7 +68,7 @@ function draw() {
 
 
   if (gameStart == true) {
-/*
+
     if (decText == false) {
       setTimeout(() => {
         decText = true;
@@ -110,10 +110,10 @@ function draw() {
         gameState = true;
       }, 14800)
     }
-*/
-//    if (gameState == true) {
+
+    if (gameState == true) {
       gameStateF()
-//    }
+   }
 
   }
 }
