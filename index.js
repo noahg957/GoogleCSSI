@@ -38,9 +38,21 @@ function setup() {
    for (let x = 0; x < 500; x+=40){
      enemies.push(new Bubble({x: window.innerWidth/2, y: window.innerHeight/2}, 10, sadImg, -4.71 + x, 5));
    }
-   
 
-   hero = new Hero({x: window.innerWidth/2, y:window.innerHeight-200}, 30, happyImg);
+
+  setIntervalX( () => {
+    for (let x = 0; x < 30; x++){
+      enemies.push(new Bubble({x: window.innerWidth, y: 50 }, 30, sadImg, 0+x, 5));
+    }
+  }, 1500, 3);
+
+  setIntervalX( () => {
+    for (let x = 0; x < 30; x++){
+      enemies.push(new Bubble({x: 0 + x, y: 50 }, 30, sadImg, 0+x, 5));
+    }
+  }, 1500, 3);
+
+   hero = new Hero({x: (window.innerWidth/2), y:window.innerHeight-200}, 30, happyImg);
 
   //  trackers = [];
   //  for (let x = 0; x < 5; x+=1){
@@ -63,7 +75,17 @@ function setup() {
 
 }
 
+function setIntervalX(callback, delay, repetitions) {
+    let x = 0;
+    let intervalID = window.setInterval(function () {
 
+       callback();
+
+       if (++x === repetitions) {
+           window.clearInterval(intervalID);
+       }
+    }, delay);
+}
 
 function draw() {
 
@@ -212,14 +234,23 @@ function mountainKing() {
 
 function updateGameState() {
 
-  enemies.forEach( (enemy, index, arr) => {
-  // enemy.tracker(hero)
-    //enemy.update({x:enemy.getX()+1, y:enemy.getY()+1});
-   enemy.move()
-    enemy.render();
+hero.changeSkin(sadImg)
 
-    if (hero.intersectingWithCircle(enemy)) {
-      console.log("intersected with " + index);
+  enemies.forEach( (enemy, index, arr) => {
+
+
+
+//    enemy.update({x:enemy.getX()+1, y:enemy.getY()+1});
+    enemy.move()
+
+    if (enemy.outOfBounds() == true) {
+      arr.splice(index,1);
+    } else {
+      enemy.render();
+    }
+
+
+    if (hero.intersectingWithCircle(enemy) && enemy.outOfBounds() == false) {
       arr.splice(index,1);
       hero.addHealth(1);
       return
@@ -264,14 +295,42 @@ class Bubble {
     return this.r;
   }
 
+  outOfBounds() {
+
+    if (this.x < -30){
+      return true
+    }
+
+    if (this.x > window.innerWidth + 30) {
+      return true
+    }
+
+    if (this.y < -30) {
+      return true
+    }
+
+    if (this.y > window.innerHeight + 30){
+      return true
+    }
+
+    return false
+
+  }
+
   update(cords) {
     this.x = cords.x;
     this.y = cords.y;
   }
 
   move() {
-    this.x += Math.cos(this.angle) * this.speed
-    this.y += Math.sin(this.angle) * this.speed
+
+    this.x = this.getX() + (Math.cos(this.angle) * this.speed)
+    this.y = this.getY() + (Math.sin(this.angle) * this.speed)
+  }
+
+  changeSkin(img) {
+    this.imageSkin = img
+
   }
 
   render() {
@@ -289,6 +348,7 @@ class Bubble {
     if (dist(this.x, this.y, Circle.getX(), Circle.getY()) > (this.r + Circle.getRadius()) ) {
       return false
     }
+    console.log("true")
     return true
   }
   is_tracker() {
