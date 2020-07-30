@@ -18,16 +18,13 @@ let enemiesToDelte = []
 let hero
 
 function preload(){
-
-  song = loadSound('./assets/rbm.mp3');
+  song = loadSound('assets/rbm.mp3');
   happyImg = loadImage('assets/img/happy.png');
-
-
 }
 
 function setup() {
 
-  songMK = loadSound('./assets/mk.mp3');
+  songMK = loadSound('assets/mk.mp3');
   sadImg = loadImage('assets/img/concern.png');
 
   cnv = createCanvas(window.innerWidth, window.innerHeight);
@@ -39,11 +36,10 @@ function setup() {
   }, 5210)
 
    for (let x = 0; x < 500; x+=100){
-     enemies.push(new Bubble({x: x, y:30}, 30, sadImg))
-
+     enemies.push(new Bubble({x: 50, y: 50}, 30, sadImg, 4.71, 30));
    }
 
-   hero = new Hero({x: window.innerWidth/2, y:window.innerHeight-200}, 30, happyImg)
+   hero = new Hero({x: window.innerWidth/2, y:window.innerHeight-200}, 30, happyImg);
 
 }
 
@@ -63,8 +59,8 @@ function draw() {
   cnv.mousePressed(canvasPressed);
 
   if (rbmPlaying) {
-    background(0)
-    gameStart = true
+    background(0);
+    gameStart = true;
   }
 
 
@@ -111,30 +107,30 @@ function draw() {
         gameState = true;
       }, 14800)
     }
-
-    if (gameState == true) {
-      gameStateF()
-   }
+*/
+  //  if (gameState == true) {
+      gameStateF();
+   //}
 
   }
 }
 
 function gameStateF() {
 
-    let bgColor = [0,0,0]
-    let delay = 2444
+    let bgColor = [0,0,0];
+    let delay = 2444;
 
-    startTime = true
+    startTime = true;
 
     background(...bgColor);
 
     textSize(55);
 
     if (clockScore == 12) {
-      am = false
+      am = false;
       if (!otherOnlyOnce){
-        otherOnlyOnce = true
-        mountainKing()
+        otherOnlyOnce = true;
+        mountainKing();
       }
 
     }
@@ -155,23 +151,23 @@ function gameStateF() {
 
 
     text("2019", (window.innerWidth/2), 123);
-    textSize(30)
-    text("Score: "+hero.health, (window.innerWidth/2), 185)
+    textSize(30);
+    text("Score: "+hero.health, (window.innerWidth/2), 185);
 
 
     if (clockScore > 12 && onlyOnceFlag == false) {
-      clockScore = 1
-      newFlag = true
-      onlyOnceFlag = true
+      clockScore = 1;
+      newFlag = true;
+      onlyOnceFlag = true;
     }
 
     if (clockScore >= 12 && newFlag) {
-      background(0)
+      background(0);
       textSize(window.innerWidth * .33);
       text("2020", window.innerWidth/2 + Math.floor(Math.random()*30), window.innerHeight/2  + Math.floor(Math.random()*30));
-      background(0)
+      background(0);
       text("2020", window.innerWidth/2 + Math.floor(Math.random()*30), window.innerHeight/2  + Math.floor(Math.random()*30));
-      background(0)
+      background(0);
       text("2020", window.innerWidth/2 + Math.floor(Math.random()*30), window.innerHeight/2  + Math.floor(Math.random()*30));
     }
 
@@ -198,30 +194,35 @@ function updateGameState() {
 
   enemies.forEach( (enemy, index, arr) => {
 
-    enemy.update({x:enemy.getX()+1, y:enemy.getY()+1})
-    enemy.render()
+    enemy.update({x:enemy.getX()+1, y:enemy.getY()+1});
+//    enemy.move()
+    enemy.render();
 
     if (hero.intersectingWithCircle(enemy)) {
-      console.log("intersected with " + index)
-      arr.splice(index,1)
-      hero.addHealth(1)
+      console.log("intersected with " + index);
+      arr.splice(index,1);
+      hero.addHealth(1);
       return
     }
   })
 
 
 
-  hero.enableControl()
-  hero.render()
+  hero.enableControl();
+  hero.render();
 }
 
 class Bubble {
 
-  constructor(cords, r, imgSkin = null){
-    this.x = cords.x
-    this.y = cords.y
-    this.r = r
-    this.imageSkin = imgSkin
+  constructor(cords = {x: window.innerWidth, y: window.innerWidth}, r, imgSkin = null, theta = 0, speed = 1){
+    this.x = cords.x;
+    this.y = cords.y;
+    this.r = r;
+
+    this.angle = theta;
+    this.speed = speed;
+
+    this.imageSkin = imgSkin;
   }
 
   getCords() {
@@ -232,20 +233,25 @@ class Bubble {
   }
 
   getX() {
-    return this.x
+    return this.x;
   }
 
   getY() {
-    return this.y
+    return this.y;
   }
 
   getRadius() {
-    return this.r
+    return this.r;
   }
 
   update(cords) {
-    this.x = cords.x
-    this.y = cords.y
+    this.x = cords.x;
+    this.y = cords.y;
+  }
+
+  move() {
+    this.x += Math.cos(this.theta) * this.speed
+    this.y += Math.sin(this.theta) * this.speed
   }
 
   render() {
@@ -270,7 +276,7 @@ class Bubble {
 
 class Hero extends Bubble {
 
-  constructor(cords, r, imgSkin = null){
+  constructor(cords = {x: window.innerWidth, y: window.innerWidth}, r, imgSkin = null, theta = 0, speed = 1) {
     super(cords, r, imgSkin)
     this.health = 0
     this.history = []
@@ -306,8 +312,6 @@ class Hero extends Bubble {
     if(this.history.length > 7){
       this.history.shift()
     }
-
-
   }
 
   addHealth(health) {
