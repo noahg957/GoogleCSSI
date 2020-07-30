@@ -35,6 +35,10 @@ function setup() {
     }
   }, 5210)
 
+   for (let x = 0; x < 500; x+=40){
+     enemies.push(new Bubble({x: window.innerWidth/2, y: window.innerHeight/2}, 10, sadImg, -4.71 + x, 5));
+   }
+
 
   setIntervalX( () => {
     for (let x = 0; x < 30; x++){
@@ -49,6 +53,25 @@ function setup() {
   }, 1500, 3);
 
    hero = new Hero({x: (window.innerWidth/2), y:window.innerHeight-200}, 30, happyImg);
+
+  //  trackers = [];
+  //  for (let x = 0; x < 5; x+=1){
+  //  trackers.push(new Tracker({x: window.innerWidth/2, y: window.innerHeight/2}, 10, sadImg, -4.71 + x, 5));
+  //  enemies.push(trackers[x]);
+  //  }
+ 
+    setInterval(() => {
+      for (let x = 0; x < 500; x+=40){
+        enemies.push(new Bubble({x: window.innerWidth/2, y: window.innerHeight/2}, 10, sadImg, -4.71 + (x), 5 + x/1000));}
+        enemies.push(new Tracker({x: window.innerWidth/2, y: window.innerHeight/2}, 10, sadImg, -4.71, 4));
+      //enemies.forEach( (item) => {item.tracker(hero)
+     // })
+   }, 500)
+   setInterval(() => {
+    enemies.forEach( (item) => {if (item.is_tracker()) {
+      item.track(hero) }
+    })
+ }, 100)
 
 }
 
@@ -215,6 +238,8 @@ hero.changeSkin(sadImg)
 
   enemies.forEach( (enemy, index, arr) => {
 
+
+
 //    enemy.update({x:enemy.getX()+1, y:enemy.getY()+1});
     enemy.move()
 
@@ -223,6 +248,7 @@ hero.changeSkin(sadImg)
     } else {
       enemy.render();
     }
+
 
     if (hero.intersectingWithCircle(enemy) && enemy.outOfBounds() == false) {
       arr.splice(index,1);
@@ -297,12 +323,14 @@ class Bubble {
   }
 
   move() {
+
     this.x = this.getX() + (Math.cos(this.angle) * this.speed)
     this.y = this.getY() + (Math.sin(this.angle) * this.speed)
   }
 
   changeSkin(img) {
     this.imageSkin = img
+
   }
 
   render() {
@@ -323,8 +351,36 @@ class Bubble {
     console.log("true")
     return true
   }
+  is_tracker() {
+    return false
+  }
+
+
 
 }
+class Tracker extends Bubble {
+constructor(cords = {x: window.innerWidth, y: window.innerWidth}, r, imgSkin = null, theta = 0, speed = 1){
+  super(cords, r, imgSkin, theta, speed )
+  this.x = cords.x;
+  this.y = cords.y;
+  this.r = r;
+
+  this.angle = theta;
+  this.speed = speed;
+
+  this.imageSkin = imgSkin;
+}
+track(hero) {
+  let cords = hero.getCords()
+  let hero_x = cords.x
+  let hero_y = cords.y
+  this.angle = Math.atan2(hero_y - this.y, hero_x - this.x);
+}
+is_tracker() {
+  return true
+}
+}
+
 
 class Hero extends Bubble {
 
