@@ -68,7 +68,7 @@ function draw() {
 
 
   if (gameStart == true) {
-
+/*
     if (decText == false) {
       setTimeout(() => {
         decText = true;
@@ -110,10 +110,10 @@ function draw() {
         gameState = true;
       }, 14800)
     }
-
-    if (gameState == true) {
+*/
+  //  if (gameState == true) {
       gameStateF()
-   }
+   //}
 
   }
 }
@@ -264,6 +264,8 @@ class Hero extends Bubble {
   constructor(cords, r, imgSkin = null){
     super(cords, r, imgSkin)
     this.health = 0
+    this.history = []
+    this.count = 0
   }
 
   update(cords) {
@@ -285,6 +287,18 @@ class Hero extends Bubble {
 
     this.x = cords.x
     this.y = cords.y
+
+    this.count += 1
+
+    if (this.count % 4 == 0){
+      this.history.push({x: this.x, y: this.y, opacity:1})
+    }
+
+    if(this.history.length > 7){
+      this.history.shift()
+    }
+
+
   }
 
   addHealth(health) {
@@ -298,19 +312,44 @@ class Hero extends Bubble {
   enableControl() {
 
     if (keyIsDown(LEFT_ARROW)) {
-      this.update({x:this.getCords().x - 5, y:this.getCords().y})
+      this.update({x:this.getCords().x - 6.9, y:this.getCords().y})
     }
 
     if (keyIsDown(RIGHT_ARROW)) {
-      this.update({x:this.getCords().x + 5, y:this.getCords().y})
+      this.update({x:this.getCords().x + 6.9, y:this.getCords().y})
     }
 
     if (keyIsDown(UP_ARROW)) {
-      this.update({x:this.getCords().x, y:this.getCords().y - 5})
+      this.update({x:this.getCords().x, y:this.getCords().y - 6.9})
     }
 
     if (keyIsDown(DOWN_ARROW)) {
-      this.update({x:this.getCords().x, y:this.getCords().y + 5})
+      this.update({x:this.getCords().x, y:this.getCords().y + 6.9})
+    }
+
+  }
+
+  render() {
+
+    ellipse(this.x, this.y, this.r*2, this.r*2)
+
+    if (this.imageSkin) {
+      imageMode(CENTER)
+
+      this.history.forEach( (point, index) => {
+
+        if (this.history[index].opacity > 0){
+          this.history[index].opacity -= .05;
+        }
+
+        drawingContext.globalAlpha = (this.history[index].opacity > 0) ? this.history[index].opacity : 0;
+        image(this.imageSkin, point.x, point.y);
+        drawingContext.globalAlpha = 1
+      })
+
+      image(this.imageSkin, this.getX(), this.getY());
+
+
     }
 
   }
