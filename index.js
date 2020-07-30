@@ -7,11 +7,18 @@ let twentyNinteenText = false
 let rbmPlaying = false
 let start = false
 let gameState = false
-let clockScore = 6
+let clockScore = 5
 let startTime = false;
 let am = true
 let isTwentyTwenty = false;
 let cnv
+
+let onlyOnceOne = false
+let onlyOnceTwo = false
+let onlyOnceThree = false
+let onlyOnceFour = false
+let onlyOnceFive = false
+let onlyOnceSix = false
 
 let enemies = []
 let enemiesToDelte = []
@@ -20,12 +27,16 @@ let hero
 function preload(){
   song = loadSound('assets/rbm.mp3');
   happyImg = loadImage('assets/img/happy.png');
+
+  skypeImg = loadImage('assets/img/skype.png');
 }
 
 function setup() {
 
   songMK = loadSound('assets/mk.mp3');
   sadImg = loadImage('assets/img/concern.png');
+  friendsImg = loadImage('assets/img/friends.png');
+  pineappleImg = loadImage('assets/img/pineapple.png');
 
   cnv = createCanvas(window.innerWidth, window.innerHeight);
 
@@ -35,43 +46,8 @@ function setup() {
     }
   }, 5210)
 
-   for (let x = 0; x < 500; x+=40){
-     enemies.push(new Bubble({x: window.innerWidth/2, y: window.innerHeight/2}, 10, sadImg, -4.71 + x, 5));
-   }
-
-
-  setIntervalX( () => {
-    for (let x = 0; x < 30; x++){
-      enemies.push(new Bubble({x: window.innerWidth, y: 50 }, 30, sadImg, 0+x, 5));
-    }
-  }, 1500, 3);
-
-  setIntervalX( () => {
-    for (let x = 0; x < 30; x++){
-      enemies.push(new Bubble({x: 0 + x, y: 50 }, 30, sadImg, 0+x, 5));
-    }
-  }, 1500, 3);
-
    hero = new Hero({x: (window.innerWidth/2), y:window.innerHeight-200}, 30, happyImg);
 
-  //  trackers = [];
-  //  for (let x = 0; x < 5; x+=1){
-  //  trackers.push(new Tracker({x: window.innerWidth/2, y: window.innerHeight/2}, 10, sadImg, -4.71 + x, 5));
-  //  enemies.push(trackers[x]);
-  //  }
- 
-    setInterval(() => {
-      for (let x = 0; x < 500; x+=40){
-        enemies.push(new Bubble({x: window.innerWidth/2, y: window.innerHeight/2}, 10, sadImg, -4.71 + (x), 5 + x/1000));}
-        enemies.push(new Tracker({x: window.innerWidth/2, y: window.innerHeight/2}, 10, sadImg, -4.71, 4));
-      //enemies.forEach( (item) => {item.tracker(hero)
-     // })
-   }, 500)
-   setInterval(() => {
-    enemies.forEach( (item) => {if (item.is_tracker()) {
-      item.track(hero) }
-    })
- }, 100)
 
 }
 
@@ -152,7 +128,7 @@ function draw() {
 */
   //  if (gameState == true) {
       gameStateF();
-   //}
+//   }
 
   }
 }
@@ -168,6 +144,73 @@ function gameStateF() {
 
     textSize(55);
 
+    if ((clockScore == 6 || clockScore == 7) && am == true) {
+      textSize(window.innerWidth * .07);
+      text('2019?\nSKYPE!', window.innerWidth/2, window.innerHeight/2);
+      textSize(55);
+    }
+
+    if (clockScore == 7 && onlyOnceOne == false) {
+
+      onlyOnceOne = true
+
+      setIntervalX( () => {
+        for (let x = 0; x < 30; x++){
+          enemies.push(new Bubble({x: window.innerWidth - 50, y: window.innerHeight - 50 }, 30, skypeImg, (1/3.14)+x, 8));
+        }
+      }, 500, 5);
+
+      setIntervalX( () => {
+        for (let x = 0; x < 30; x++){
+          enemies.push(new Bubble({x: 50, y: window.innerHeight - 50 }, 30, skypeImg, (1/3.14)+x, 8));
+        }
+      }, 500, 5);
+
+      setIntervalX( () => {
+        for (let x = 0; x < 50; x++){
+          enemies.push(new Bubble({x: window.innerWidth / 2, y: window.innerHeight}, 30, skypeImg, (1/3.14)+x, 13));
+        }
+      }, 800, 3);
+
+    }
+
+    if ((clockScore == 8 || clockScore == 9 || clockScore == 10) && (am == true)) {
+      textSize(window.innerWidth * .07);
+      text('SEE FRIENDS!', window.innerWidth/2, window.innerHeight/2);
+      textSize(55);
+    }
+
+    if (clockScore == 8 && onlyOnceTwo == false) {
+
+      onlyOnceTwo = true
+
+      setIntervalX(() => {
+          for (let x = 0; x < 500; x+=40){
+            enemies.push(new Bubble({x: window.innerWidth/2, y: window.innerHeight/2}, 10, friendsImg, -4.71 + (x), 5 + x/1000));}
+  //          enemies.push(new Tracker({x: window.innerWidth/2, y: window.innerHeight/2}, 10, happyImg, -4.71, 4));
+       }, 1300, 10)
+
+      setIntervalX( () => {
+        for (let x = 0; x < 50; x++){
+          enemies.push(new Bubble({x: window.innerWidth / 2, y: window.innerHeight}, 30, friendsImg, (1/3.14)+x, 4));
+        }
+      }, 1000, 7);
+
+      setIntervalX( () => {
+        for (let x = 0; x < 50; x++){
+          enemies.push(new Bubble({x: window.innerWidth / 2, y: window.innerHeight}, 30, friendsImg, (1/3.14)+x, 13));
+        }
+      }, 200, 9);
+
+
+      setIntervalX( () => {
+        for (let x = 0; x < 500; x+=50){
+          enemies.push(new Bubble({x: x*2, y: window.innerHeight}, 30, happyImg, (1/3.14)+x, 13));
+        }
+      }, 800, 12);
+
+    }
+
     if (clockScore == 12) {
       am = false;
       if (!otherOnlyOnce){
@@ -176,6 +219,30 @@ function gameStateF() {
       }
 
     }
+
+    if (clockScore == 11 || (clockScore == 12 && am == false) || (clockScore == 1 && am == false)) {
+      textSize(window.innerWidth * .03);
+      text('GO TO SUPERMARKET\nCHOOSE OWN PINEAPPLE\nNO ROTTEN INSTACART PINEAPPLE', window.innerWidth/2, window.innerHeight/2);
+      textSize(55);
+    }
+//CCL
+    if (((clockScore == 12 && am == false) || clockScore == 1) && onlyOnceThree == false) {
+
+      onlyOnceThree = true
+
+      setIntervalX( () => {
+        for (let x = 0; x < 30; x++){
+          enemies.push(new Bubble({x: window.innerWidth - 50 - (Math.random() * 150), y: window.innerHeight - 50 }, 30, pineappleImg, (1/3.14)+x, 8));
+        }
+      }, 500, 14);
+
+    }
+
+
+
+
+
+
 
     if (am) {
       text(clockScore+":00 A.M.", (window.innerWidth/2), 50);
@@ -213,11 +280,7 @@ function gameStateF() {
       text("2020", window.innerWidth/2 + Math.floor(Math.random()*30), window.innerHeight/2  + Math.floor(Math.random()*30));
     }
 
-
     updateGameState();
-
-
-
 
 }
 
@@ -234,13 +297,12 @@ function mountainKing() {
 
 function updateGameState() {
 
-hero.changeSkin(sadImg)
-
   enemies.forEach( (enemy, index, arr) => {
 
+    if (enemy.is_tracker()) {
+      enemy.track(hero)
+    }
 
-
-//    enemy.update({x:enemy.getX()+1, y:enemy.getY()+1});
     enemy.move()
 
     if (enemy.outOfBounds() == true) {
@@ -249,7 +311,6 @@ hero.changeSkin(sadImg)
       enemy.render();
     }
 
-
     if (hero.intersectingWithCircle(enemy) && enemy.outOfBounds() == false) {
       arr.splice(index,1);
       hero.addHealth(1);
@@ -257,11 +318,12 @@ hero.changeSkin(sadImg)
     }
   })
 
-
-
   hero.enableControl();
   hero.render();
 }
+
+
+
 
 class Bubble {
 
@@ -351,6 +413,7 @@ class Bubble {
     console.log("true")
     return true
   }
+
   is_tracker() {
     return false
   }
@@ -358,6 +421,8 @@ class Bubble {
 
 
 }
+
+
 class Tracker extends Bubble {
 constructor(cords = {x: window.innerWidth, y: window.innerWidth}, r, imgSkin = null, theta = 0, speed = 1){
   super(cords, r, imgSkin, theta, speed )
@@ -370,15 +435,20 @@ constructor(cords = {x: window.innerWidth, y: window.innerWidth}, r, imgSkin = n
 
   this.imageSkin = imgSkin;
 }
+
+
+
 track(hero) {
   let cords = hero.getCords()
   let hero_x = cords.x
   let hero_y = cords.y
   this.angle = Math.atan2(hero_y - this.y, hero_x - this.x);
 }
+
 is_tracker() {
   return true
 }
+
 }
 
 
@@ -456,6 +526,7 @@ class Hero extends Bubble {
 
     if (this.imageSkin) {
       imageMode(CENTER)
+
 
       //the trail
       this.history.forEach( (point, index) => {
