@@ -20,6 +20,7 @@ let hero
 function preload(){
   song = loadSound('assets/rbm.mp3');
   happyImg = loadImage('assets/img/happy.png');
+  skypeImg = loadImage('assets/img/skype.png');
 }
 
 function setup() {
@@ -59,7 +60,7 @@ function setup() {
   //  trackers.push(new Tracker({x: window.innerWidth/2, y: window.innerHeight/2}, 10, sadImg, -4.71 + x, 5));
   //  enemies.push(trackers[x]);
   //  }
- 
+
     setInterval(() => {
       for (let x = 0; x < 500; x+=40){
         enemies.push(new Bubble({x: window.innerWidth/2, y: window.innerHeight/2}, 10, sadImg, -4.71 + (x), 5 + x/1000));}
@@ -107,7 +108,7 @@ function draw() {
 
 
   if (gameStart == true) {
-/*
+
     if (decText == false) {
       setTimeout(() => {
         decText = true;
@@ -149,10 +150,10 @@ function draw() {
         gameState = true;
       }, 14800)
     }
-*/
-  //  if (gameState == true) {
+
+    if (gameState == true) {
       gameStateF();
-   //}
+   }
 
   }
 }
@@ -358,6 +359,8 @@ class Bubble {
 
 
 }
+
+
 class Tracker extends Bubble {
 constructor(cords = {x: window.innerWidth, y: window.innerWidth}, r, imgSkin = null, theta = 0, speed = 1){
   super(cords, r, imgSkin, theta, speed )
@@ -370,15 +373,18 @@ constructor(cords = {x: window.innerWidth, y: window.innerWidth}, r, imgSkin = n
 
   this.imageSkin = imgSkin;
 }
+
 track(hero) {
   let cords = hero.getCords()
   let hero_x = cords.x
   let hero_y = cords.y
   this.angle = Math.atan2(hero_y - this.y, hero_x - this.x);
 }
+
 is_tracker() {
   return true
 }
+
 }
 
 
