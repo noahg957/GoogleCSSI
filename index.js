@@ -14,6 +14,7 @@ let isTwentyTwenty = false;
 let cnv
 
 let enemies = []
+let enemiesToDelte = []
 let hero
 
 function preload(){
@@ -110,10 +111,10 @@ function draw() {
         gameState = true;
       }, 14800)
     }
-*/
-  //  if (gameState == true) {
+
+    if (gameState == true) {
       gameStateF()
-   //}
+   }
 
   }
 }
@@ -175,19 +176,7 @@ function gameStateF() {
     }
 
 
-    enemies.forEach(enemy => {
-      enemy.update({x:enemy.getX()+1, y:enemy.getY()+1})
-      enemy.render()
-      if(hero.intersectingWithCircle(enemy)){
-        hero.addHealth(1)
-      }
-    })
-
-
-
-
-    hero.enableControl()
-    hero.render()
+    updateGameState();
 
 
 
@@ -198,12 +187,32 @@ function canvasPressed() {
   if (rbmPlaying == false) {
     song.play();
     rbmPlaying = true;
-
   }
 }
 
 function mountainKing() {
   songMK.play();
+}
+
+function updateGameState() {
+
+  enemies.forEach( (enemy, index, arr) => {
+
+    enemy.update({x:enemy.getX()+1, y:enemy.getY()+1})
+    enemy.render()
+
+    if (hero.intersectingWithCircle(enemy)) {
+      console.log("intersected with " + index)
+      arr.splice(index,1)
+      hero.addHealth(1)
+      return
+    }
+  })
+
+
+
+  hero.enableControl()
+  hero.render()
 }
 
 class Bubble {
@@ -330,25 +339,24 @@ class Hero extends Bubble {
   }
 
   render() {
-
+    //background ellipse
     ellipse(this.x, this.y, this.r*2, this.r*2)
 
     if (this.imageSkin) {
       imageMode(CENTER)
 
+      //the trail
       this.history.forEach( (point, index) => {
-
         if (this.history[index].opacity > 0){
           this.history[index].opacity -= .05;
         }
-
         drawingContext.globalAlpha = (this.history[index].opacity > 0) ? this.history[index].opacity : 0;
         image(this.imageSkin, point.x, point.y);
         drawingContext.globalAlpha = 1
       })
 
+      //avatar pic
       image(this.imageSkin, this.getX(), this.getY());
-
 
     }
 
